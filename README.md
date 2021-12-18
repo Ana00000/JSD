@@ -11,17 +11,18 @@ In both cases data will be stored in postgreSQL databases, but for the second ca
 Reports of the matches are generated as HTML files and they can be transformed to the PDFs if needed.
 
 The way that the data is collected from the databases is enabled via the language we created specifically for this cause.
-
 Data used for this application is collected from few different sources, such as:
 1. https://www.api-football.com/
 2. https://serpapi.com/sports-results
 3. ...
+
 and many others.
 
 ## Example
 
 Football commentators before the broadcast usually want to be informed about the events in the last round through reports, or events about a team since the beginning of the season.
-The result for this will be presented in different HTML elements (tables, pictures, paragraphs, labels, etc.). 
+
+Several different types of Jinja2 templates are used for the elements (tables, pictures, paragraphs, labels, etc.) in the report.
 
 ## Technologies used
 - [textX](https://github.com/textX/textX)
