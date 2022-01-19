@@ -1,0 +1,45 @@
+Program:
+  'begin'
+    reports*=Report
+    filters*=Filter
+  'end'
+;
+
+Report:
+  Match | Team | Player
+;
+
+Match: 
+  'Match: ' firstTeam=STRING ' vs ' secondTeam=STRING 
+;
+
+Team:
+  'Team: ' + teamName=STRING 
+;
+
+Player:
+  'Player: Name-' name=STRING ', Surname-' surname=STRING
+;
+
+Filter: 
+  Goal | PlayerName | MatchDate
+;
+
+Goal:
+  'Filter by goal: min-' goalMin=INT
+  ', max-' goalMax=INT 
+;
+
+PlayerName:
+  'Filter by player name: ' playerName=STRING
+;
+
+MatchDate:
+  'Filter by match date: '
+  'from-' matchDateFrom=STRING 
+  ', to-' matchDateTo=STRING 
+;
+
+Comment:
+  /\/\/.*$/
+;
