@@ -1,0 +1,3 @@
+[textx_languages]
+reporter = reporter_jsd:reporter_language
+
