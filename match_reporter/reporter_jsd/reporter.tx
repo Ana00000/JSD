@@ -1,6 +1,6 @@
 Program:
   'begin'
-    reports*=Report
+    reports*=Report   
     filters*=Filter
   'end'
 ;
@@ -10,7 +10,7 @@ Report:
 ;
 
 Match: 
-  'Match: ' firstTeam=STRING ' vs ' secondTeam=STRING 
+  'Match: ' firstTeam=STRING 'vs' secondTeam=STRING 
 ;
 
 Team:

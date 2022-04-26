@@ -1,4 +1,4 @@
-README.md
+LICENSE
 setup.cfg
 setup.py
 match_reporter.egg-info/PKG-INFO
@@ -9,3 +9,4 @@ match_reporter.egg-info/not-zip-safe
 match_reporter.egg-info/requires.txt
 match_reporter.egg-info/top_level.txt
 reporter_jsd/__init__.py
+reporter_jsd/reporter.tx
