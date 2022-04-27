@@ -20,6 +20,13 @@ def export_model():
 
     meta_model = metamodel_from_file(join(current_dir, 'reporter.tx'), debug=False)
 
+    model = meta_model.model_from_file('example1.rpt')
+
+    print("TEAMS: \n")
+    for report in model.reports:
+        print(report.firstTeam)
+        print(report.secondTeam)
+        
     metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
 
 
@@ -75,7 +82,7 @@ def create_pdf(file_name):
             text += liner
             count += 1
 
-        config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+        config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
         pdfkit.from_string(text, 'templates/pdf/' + file_name + '.pdf', configuration=config)
 
 
