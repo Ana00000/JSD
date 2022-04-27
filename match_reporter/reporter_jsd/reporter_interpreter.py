@@ -8,8 +8,11 @@ import json
 import http.client
 import psycopg2
 from sqlalchemy import create_engine
-import sqlalchemy
-
+import pdfkit
+from pdfkit.api import configuration
+import html
+import csv
+import os
 
 def export_model():
 
@@ -48,6 +51,34 @@ def store_data(table_name, df):
     con.close()
 
 
+def create_pdf(file_name):
+
+    with open("templates/txt/" + file_name + ".txt", "rb") as f:
+        count = 1
+        text = ''
+        columns = []
+            
+        for line in f.readlines():
+            line = format(line).replace("b'", '').replace("\\r", '').replace("\\n'", '')
+            liner = '__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________'
+            
+            if count == 1:
+                header = ''
+                for column in format(line).split():
+                    columns.append(column)
+                    header += ' ' + column 
+                text += ' Provided info for: {} '.format(header) + liner
+            else:
+                for index, column in enumerate(columns):
+                    text += ' {} | {} '.format(column, format(line).split()[index])
+
+            text += liner
+            count += 1
+
+        config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+        pdfkit.from_string(text, 'templates/pdf/' + file_name + '.pdf', configuration=config)
+
+
 def get_data():
 
     responseTeams, responseMatches = get_responses()
@@ -64,19 +95,23 @@ def get_data():
 
     new_dict_teams = pd.json_normalize(responseTeams['teams'])
     df_teams = pd.DataFrame.from_dict(new_dict_teams)
-    #df_teams.to_csv("teams.csv")
+    df_teams.to_csv("templates/csv/teams.csv")
+    df_teams.to_html("templates/html/teams.html")  
     store_data("PremierLeagueTeams", df_teams)
 
     new_dict_matches = pd.json_normalize(responseMatches['matches'])
     df_matches = pd.DataFrame.from_dict(new_dict_matches)
-    #df_matches.to_csv("matches.csv")
+    df_matches.to_csv("templates/csv/matches.csv")
+    df_teams.to_html("templates/html/matches.html")
     store_data("ManUtdMatches", df_matches)
 
-    with open("Teams.txt", "w") as teams_file:
+    with open("templates/txt/teams.txt", "w") as teams_file:
         teams_file.write(df_teams.to_string())
     
-    with open("Matches.txt", "w") as matches_file:
-        matches_file.write(df_matches.to_string())
+   # with open("Matches.txt", "w") as matches_file:
+   #     matches_file.write(df_matches.to_string())
+
+    create_pdf("teams")
 
 
 if __name__ == "__main__":
