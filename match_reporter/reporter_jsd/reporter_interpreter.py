@@ -1,4 +1,5 @@
 from os.path import join, dirname
+from signal import SIG_DFL
 from textx import metamodel_from_file
 from textx.export import metamodel_export, model_export_to_file
 import pandas as pd
@@ -8,6 +9,8 @@ import json
 import http.client
 import psycopg2
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import sqlalchemy as db
 import pdfkit
 from pdfkit.api import configuration
 import html
@@ -26,8 +29,25 @@ def export_model():
     for report in model.reports:
         print(report.firstTeam)
         print(report.secondTeam)
-        
+    
+    get_team_id("Man United")
+
     metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
+
+def get_team_id(team_name):
+
+    engine = create_engine("postgresql://postgres:root@localhost/jsd")
+    
+    connection = engine.connect()
+    metadata = db.MetaData()
+    teams = db.Table('PremierLeagueTeams', metadata, autoload=True, autoload_with=engine)
+
+    query = db.select([teams]).where(teams.columns.shortName == "Man United")
+
+    print(connection.execute(query).fetchall())
+
+
+    return 0
 
 
 def load_json(connection):
@@ -123,9 +143,11 @@ def get_data():
 
 if __name__ == "__main__":
 
+    get_data()
+
     export_model()
 
-    get_data()
+    #get_data()
 
 
 

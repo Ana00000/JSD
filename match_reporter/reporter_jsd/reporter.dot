@@ -11,34 +11,34 @@
     edge[dir=black,arrowtail=empty]
 
 
-5535411440[ label="{Program|}"]
+5325708608[ label="{Program|}"]
 
-5535414848[ label="{*Report|}"]
+5325712016[ label="{*Report|}"]
 
-5535418256[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
+5325715424[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
 
-5535422240[ label="{Team|teamName: STRING\l}"]
+5282744304[ label="{Team|teamName: STRING\l}"]
 
-5535425648[ label="{Player|name: STRING\lsurname: STRING\l}"]
+5282747712[ label="{Player|name: STRING\lsurname: STRING\l}"]
 
-5535429056[ label="{*Filter|}"]
+5325714480[ label="{*Filter|}"]
 
-4967121040[ label="{Goal|goalMin: INT\lgoalMax: INT\l}"]
+5282743360[ label="{Goal|goalMin: INT\lgoalMax: INT\l}"]
 
-4967124448[ label="{PlayerName|playerName: STRING\l}"]
+5282753584[ label="{PlayerName|playerName: STRING\l}"]
 
-4967127856[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
+5282756992[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
 
 
 
-5535411440 -> 5535414848[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
-5535411440 -> 5535429056[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
-5535414848 -> 5535418256 [dir=back]
-5535414848 -> 5535422240 [dir=back]
-5535414848 -> 5535425648 [dir=back]
-5535429056 -> 4967121040 [dir=back]
-5535429056 -> 4967124448 [dir=back]
-5535429056 -> 4967127856 [dir=back]
+5325708608 -> 5325712016[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
+5325708608 -> 5325714480[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
+5325712016 -> 5325715424 [dir=back]
+5325712016 -> 5282744304 [dir=back]
+5325712016 -> 5282747712 [dir=back]
+5325714480 -> 5282743360 [dir=back]
+5325714480 -> 5282753584 [dir=back]
+5325714480 -> 5282756992 [dir=back]
 match_rules [ shape=plaintext, label=< <table>
 	<tr>
 		<td><b>Comment</b></td><td>\/\/.*$</td>
