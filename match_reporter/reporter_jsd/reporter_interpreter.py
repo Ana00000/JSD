@@ -42,12 +42,15 @@ def get_team_id(team_name):
     metadata = db.MetaData()
     teams = db.Table('PremierLeagueTeams', metadata, autoload=True, autoload_with=engine)
 
-    query = db.select([teams]).where(teams.columns.shortName == "Man United")
+    query = db.select([teams.columns.id]).where(teams.columns.shortName == "Man United")
 
-    print(connection.execute(query).fetchall())
+    try:
+        print(connection.execute(query).fetchall()[0][0])
+        return connection.execute(query).fetchall()
+    except:
+        return -1
+    
 
-
-    return 0
 
 
 def load_json(connection):
