@@ -29,8 +29,9 @@ def export_model():
     for report in model.reports:
         print(report.firstTeam)
         print(report.secondTeam)
-    
-    get_team_id("Man United")
+        save_team_data(get_team_id(report.firstTeam), report.firstTeam)
+        save_team_data(get_team_id(report.secondTeam), report.secondTeam)
+
 
     metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
 
@@ -42,14 +43,22 @@ def get_team_id(team_name):
     metadata = db.MetaData()
     teams = db.Table('PremierLeagueTeams', metadata, autoload=True, autoload_with=engine)
 
-    query = db.select([teams.columns.id]).where(teams.columns.shortName == "Man United")
+    query = db.select([teams.columns.id]).where(teams.columns.shortName == team_name)
 
     try:
-        print(connection.execute(query).fetchall()[0][0])
-        return connection.execute(query).fetchall()
+        team_id = connection.execute(query).fetchall()[0][0]
+        print(team_id)
+        return team_id
     except:
         return -1
+
+
     
+def save_team_data(team_id, team_name):
+    data = get_matches_data(team_id)
+    table_name = team_name.replace(' ', '') + 'Matches'
+    store_data(table_name, data)
+
 
 
 
@@ -58,18 +67,25 @@ def load_json(connection):
     return json.loads(connection.getresponse().read().decode())
 
 
-def get_responses():
+def get_matches_response(team_id):
+    connection = http.client.HTTPConnection('api.football-data.org')
+    headers = { 'X-Auth-Token': '168f3965594844d190db11b5388f9085' }
+
+    connection.request('GET', '/v2/teams/66/matches', None, headers )
+    responseMatches = load_json(connection)
+
+    return responseMatches
+
+
+def get_teams_responses():
 
     connection = http.client.HTTPConnection('api.football-data.org')
     headers = { 'X-Auth-Token': '168f3965594844d190db11b5388f9085' }
 
     connection.request('GET', '/v2/competitions/PL/teams/', None, headers )
     responseTeams = load_json(connection)
-    
-    connection.request('GET', '/v2/teams/66/matches', None, headers )
-    responseMatches = load_json(connection)
 
-    return responseTeams, responseMatches
+    return responseTeams
 
 
 def store_data(table_name, df):
@@ -109,19 +125,34 @@ def create_pdf(file_name):
         pdfkit.from_string(text, 'templates/pdf/' + file_name + '.pdf', configuration=config)
 
 
-def get_data():
+def get_matches_data(team_id):
 
-    responseTeams, responseMatches = get_responses()
+    responseMatches = get_matches_response(team_id)
 
     for match in responseMatches['matches']:
         referees = pd.json_normalize(match["referees"])
         df_referees = pd.DataFrame.from_dict(referees)
         if not df_referees.empty:
-            #print(match['referees'])
-            #print(next((referee['name'] for referee in match['referees'] if referee['role'] == 'REFEREE'), None))
-            #obj = next((referee for referee in referees if referee['name'] == 'REFEREE'), None)
-            #match["referees"] = str(df_referees).encode('cp1252', errors='replace').decode('cp1252')
             match['referees'] = next((referee['name'] for referee in match['referees'] if referee['role'] == 'REFEREE'), None)
+
+    new_dict_matches = pd.json_normalize(responseMatches['matches'])
+    df_matches = pd.DataFrame.from_dict(new_dict_matches)
+    df_matches.to_csv("templates/csv/matches.csv")
+    #store_data("ManUtdMatches", df_matches)
+
+    #with open("templates/txt/teams.txt", "w") as teams_file:
+    #    teams_file.write(df_teams.to_string())
+    
+   # with open("Matches.txt", "w") as matches_file:
+   #     matches_file.write(df_matches.to_string())
+
+    create_pdf("teams")
+    
+    return df_matches
+
+def get_teams_data():
+
+    responseTeams = get_teams_responses()
 
     new_dict_teams = pd.json_normalize(responseTeams['teams'])
     df_teams = pd.DataFrame.from_dict(new_dict_teams)
@@ -129,24 +160,11 @@ def get_data():
     df_teams.to_html("templates/html/teams.html")  
     store_data("PremierLeagueTeams", df_teams)
 
-    new_dict_matches = pd.json_normalize(responseMatches['matches'])
-    df_matches = pd.DataFrame.from_dict(new_dict_matches)
-    df_matches.to_csv("templates/csv/matches.csv")
-    df_teams.to_html("templates/html/matches.html")
-    store_data("ManUtdMatches", df_matches)
-
-    with open("templates/txt/teams.txt", "w") as teams_file:
-        teams_file.write(df_teams.to_string())
-    
-   # with open("Matches.txt", "w") as matches_file:
-   #     matches_file.write(df_matches.to_string())
-
-    create_pdf("teams")
 
 
 if __name__ == "__main__":
 
-    get_data()
+    #get_data()
 
     export_model()
 
