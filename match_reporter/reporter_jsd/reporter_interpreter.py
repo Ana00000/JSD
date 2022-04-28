@@ -87,12 +87,12 @@ def get_teams_responses():
 
     return responseTeams
 
-def get_player_responses():
+def get_player_responses(id):
 
     connection = http.client.HTTPConnection('api.football-data.org')
     headers = { 'X-Auth-Token': '168f3965594844d190db11b5388f9085' }
 
-    connection.request('GET', '/v2/players/165267/', None, headers )
+    connection.request('GET', '/v2/players/' + str(id), None, headers )
     responsePlayer = load_json(connection)
 
     return responsePlayer
@@ -169,9 +169,9 @@ def get_teams_data():
     df_teams.to_html("templates/html/teams.html")  
     store_data("PremierLeagueTeams", df_teams)
 
-def get_player_data():
+def get_player_data(id):
 
-    responsePlayer = get_player_responses()
+    responsePlayer = get_player_responses(id)
 
     new_dict_player = pd.json_normalize(responsePlayer)
     df_player = pd.DataFrame.from_dict(new_dict_player)
@@ -182,7 +182,14 @@ def get_player_data():
 if __name__ == "__main__":
 
     #get_data()
-    get_player_data()
+    
+    user_input = input("Enter positive number: ")
+
+    if (user_input.isnumeric()):
+        get_player_data(user_input)
+    else:
+        print("You must input positive number!")
+
     export_model()
 
     #get_data()
