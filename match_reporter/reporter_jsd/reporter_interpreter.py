@@ -87,6 +87,15 @@ def get_teams_responses():
 
     return responseTeams
 
+def get_player_responses():
+
+    connection = http.client.HTTPConnection('api.football-data.org')
+    headers = { 'X-Auth-Token': '168f3965594844d190db11b5388f9085' }
+
+    connection.request('GET', '/v2/players/165267/', None, headers )
+    responsePlayer = load_json(connection)
+
+    return responsePlayer
 
 def store_data(table_name, df):
 
@@ -160,12 +169,20 @@ def get_teams_data():
     df_teams.to_html("templates/html/teams.html")  
     store_data("PremierLeagueTeams", df_teams)
 
+def get_player_data():
 
+    responsePlayer = get_player_responses()
+
+    new_dict_player = pd.json_normalize(responsePlayer)
+    df_player = pd.DataFrame.from_dict(new_dict_player)
+    df_player.to_csv("templates/csv/player.csv")
+    df_player.to_html("templates/html/player.html")
+    store_data("PremierLeaguePlayer", df_player)
 
 if __name__ == "__main__":
 
     #get_data()
-
+    get_player_data()
     export_model()
 
     #get_data()
