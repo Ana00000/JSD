@@ -37,7 +37,7 @@ def export_model():
 
 def get_team_id(team_name):
 
-    engine = create_engine("postgresql://postgres:root@localhost/jsd")
+    engine = create_engine("postgresql://postgres:admin@localhost/jsd")
     
     connection = engine.connect()
     metadata = db.MetaData()
@@ -90,7 +90,7 @@ def get_teams_responses():
 
 def store_data(table_name, df):
 
-    con = create_engine("postgresql://postgres:root@localhost/jsd").connect()
+    con = create_engine("postgresql://postgres:admin@localhost/jsd").connect()
 
     df.to_sql(table_name, con, if_exists='replace', index='False')
 
@@ -121,7 +121,7 @@ def create_pdf(file_name):
             text += liner
             count += 1
 
-        config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
+        config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
         pdfkit.from_string(text, 'templates/pdf/' + file_name + '.pdf', configuration=config)
 
 
