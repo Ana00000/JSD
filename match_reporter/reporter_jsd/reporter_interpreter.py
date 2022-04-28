@@ -181,8 +181,6 @@ def get_player_data(id):
 
 if __name__ == "__main__":
 
-    #get_data()
-    
     user_input = input("Enter positive number: ")
 
     if (user_input.isnumeric()):
