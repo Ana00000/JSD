@@ -35,6 +35,24 @@ def export_model():
 
     metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
 
+def export_player_model():
+
+    current_dir = dirname(__file__)
+
+    meta_model = metamodel_from_file(join(current_dir, 'reporter.tx'), debug=False)
+
+    model = meta_model.model_from_file('player1.rpt')
+
+    print("Player:\n")
+    for report in model.reports:
+        print(report.name)
+        print(report.surname)
+        print(get_player_first_name(report.name + " " + report.surname))
+        print(get_player_last_name(report.name + " " + report.surname))
+
+    metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
+
+
 def get_team_id(team_name):
 
     engine = create_engine("postgresql://postgres:admin@localhost/jsd")
@@ -52,8 +70,35 @@ def get_team_id(team_name):
     except:
         return -1
 
+def get_player_name(player_id):
 
+    engine = create_engine("postgresql://postgres:admin@localhost/jsd")
     
+    connection = engine.connect()
+    metadata = db.MetaData()
+    player = db.Table('PremierLeaguePlayer', metadata, autoload=True, autoload_with=engine)
+
+    query = db.select([player.columns.name]).where(player.columns.id == player_id)
+
+    try:
+        player_name = connection.execute(query).fetchall()[0][0]
+        print(player_name)
+        return player_name
+    except:
+        return -1
+
+def get_player_first_name(player_name):
+    player_name_part = player_name.split(" ")
+    return player_name_part[0]
+
+def get_player_last_name(player_name):
+    player_name_part = player_name.split(" ")
+
+    if (len(player_name_part) == 2):
+        return player_name_part[1]
+    return ""
+    
+
 def save_team_data(team_id, team_name):
     data = get_matches_data(team_id)
     table_name = team_name.replace(' ', '') + 'Matches'
@@ -181,12 +226,14 @@ def get_player_data(id):
 
 if __name__ == "__main__":
 
-    user_input = input("Enter positive number: ")
+    player_id = input("Enter positive number: ")
 
-    if (user_input.isnumeric()):
-        get_player_data(user_input)
+    if (player_id.isnumeric()):
+        get_player_data(player_id)
     else:
         print("You must input positive number!")
+
+    export_player_model()
 
     export_model()
 
