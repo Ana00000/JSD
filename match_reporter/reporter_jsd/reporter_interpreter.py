@@ -142,6 +142,15 @@ def get_player_responses(id):
 
     return responsePlayer
 
+def get_player_matches_responses(id):
+    connection = http.client.HTTPConnection('api.football-data.org')
+    headers = { 'X-Auth-Token': '168f3965594844d190db11b5388f9085' }
+
+    connection.request('GET', '/v2/players/' + str(id) + '/matches', None, headers )
+    responsePlayerMatches = load_json(connection)
+
+    return responsePlayerMatches
+
 def store_data(table_name, df):
 
     con = create_engine("postgresql://postgres:admin@localhost/jsd").connect()
@@ -224,6 +233,23 @@ def get_player_data(id):
     df_player.to_html("templates/html/player.html")
     store_data("PremierLeaguePlayer", df_player)
 
+def get_player_matches_data(id):
+
+    responsePlayerMatches = get_player_matches_responses(id)
+
+    for match in responsePlayerMatches['matches']:
+        referees = pd.json_normalize(match["referees"])
+        df_referees = pd.DataFrame.from_dict(referees)
+        if not df_referees.empty:
+            match['referees'] = next((referee['name'] for referee in match['referees'] if referee['role'] == 'REFEREE'), None)
+
+    new_dict_matches = pd.json_normalize(responsePlayerMatches['matches'])
+    df_player_matches = pd.DataFrame.from_dict(new_dict_matches)
+    df_player_matches.to_csv("templates/csv/player_matches.csv")
+    df_player_matches.to_html("templates/html/player_matches.html")
+    store_data("PremierLeaguePlayerMatches", df_player_matches)
+
+
 if __name__ == "__main__":
 
     player_id = input("Enter positive number: ")
@@ -232,7 +258,7 @@ if __name__ == "__main__":
         get_player_data(player_id)
     else:
         print("You must input positive number!")
-
+    get_player_matches_data(player_id)
     export_player_model()
 
     export_model()
