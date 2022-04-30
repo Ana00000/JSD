@@ -231,6 +231,7 @@ def get_player_data(id):
     df_player = pd.DataFrame.from_dict(new_dict_player)
     df_player.to_csv("templates/csv/player.csv")
     df_player.to_html("templates/html/player.html")
+    create_pdf("player")
     store_data("PremierLeaguePlayer", df_player)
 
 def get_player_matches_data(id):
@@ -248,7 +249,6 @@ def get_player_matches_data(id):
     df_player_matches.to_csv("templates/csv/player_matches.csv")
     df_player_matches.to_html("templates/html/player_matches.html")
     store_data("PremierLeaguePlayerMatches", df_player_matches)
-
 
 if __name__ == "__main__":
 
