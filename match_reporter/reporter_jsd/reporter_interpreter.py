@@ -1,5 +1,6 @@
 from os import mkdir
 from os.path import join, dirname, exists
+from signal import SIG_DFL
 from textx import metamodel_from_file
 from textx.export import metamodel_export, model_export_to_file
 import pandas as pd
@@ -9,6 +10,8 @@ import json
 import http.client
 import psycopg2
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import sqlalchemy as db
 import pdfkit
 import html
 import csv
@@ -21,13 +24,53 @@ html_folder_path = all_files_folder_path + "html_files/"
 pdf_folder_path = all_files_folder_path + "pdf_files/"
 
 
-def export_model():
+def export_teams_model():
 
     current_dir = dirname(__file__)
 
     meta_model = metamodel_from_file(join(current_dir, 'reporter.tx'), debug=False)
 
+    model = meta_model.model_from_file('example1.rpt')
+
+    for report in model.reports:
+        save_team_data(get_team_id(report.firstTeam), report.firstTeam)
+        save_team_data(get_team_id(report.secondTeam), report.secondTeam)
+
     metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
+
+
+def get_team_id(team_name):
+
+    connection = create_engine("postgresql://postgres:root@localhost/jsd").connect()
+    metadata = db.MetaData()
+    teamResponse = get_data_response('/v2/competitions/PL/teams/')
+    normalized_json_data = pd.json_normalize(teamResponse["teams"])
+    data_frame = pd.DataFrame.from_dict(normalized_json_data)
+    data_frame.to_sql("PremierLeagueTeams", connection, if_exists='replace', index='False')
+
+    teams = db.Table('PremierLeagueTeams', metadata, autoload=True, autoload_with=connection)
+    query = db.select([teams.columns.id]).where(teams.columns.shortName == team_name)
+
+    try:
+        team_id = connection.execute(query).fetchall()[0][0]
+        connection.close()
+        return team_id
+    except:
+        connection.close()
+        return -1
+
+
+def save_team_data(team_id, team_name):
+
+    teamResponse = get_data_response('/v2/teams/' + str(team_id) + '/matches')
+
+    normalized_json_data = pd.json_normalize(teamResponse['matches'])
+
+    data_frame = pd.DataFrame.from_dict(normalized_json_data)
+
+    create_files(team_name, data_frame)
+
+    #store_data(team_name.replace(' ', ''), data_frame)
 
 
 def load_json(connection):
@@ -77,12 +120,12 @@ def get_data_response(request_path):
 
 def set_pdf_styling(data_name):
 
-    if data_name == 'matches':
+    if data_name == 'referees':
         pdf_style_file = css_folder_path + data_name + ".css"
     elif data_name == 'teams':
         pdf_style_file = css_folder_path + data_name + ".css"
-    elif data_name == 'referees':
-        pdf_style_file = css_folder_path + data_name + ".css"
+    else:
+        pdf_style_file = css_folder_path + "matches.css"
 
     return pdf_style_file
 
@@ -127,28 +170,28 @@ def compose_data(response, data_name, normalized_json_data):
 
     if not normalized_json_data:
         normalized_json_data = pd.json_normalize(response[data_name])
-    
+
     data_frame = pd.DataFrame.from_dict(normalized_json_data)
     create_files(data_name, data_frame)
-    store_data(data_name, data_frame)
+    store_data(data_name.replace(' ', ''), data_frame)
 
 
 def get_data():
-
-    create_data_folders()
 
     responseTeams = get_data_response('/v2/competitions/PL/teams/')
     responseMatches = get_data_response('/v2/teams/66/matches')
     responseMatches, normalized_json_referees = separateRefereesFromMatches(responseMatches)
 
-    compose_data(responseTeams, "teams", {})
     compose_data(responseMatches, "matches", {})
+    compose_data(responseTeams, "teams", {})
     compose_data({}, "referees", normalized_json_referees)
 
 
 if __name__ == "__main__":
 
-    export_model()
+    create_data_folders()
+
+    export_teams_model()
 
     get_data()
 
