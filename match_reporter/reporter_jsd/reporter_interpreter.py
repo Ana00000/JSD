@@ -84,7 +84,7 @@ def set_pdf_styling(data_name):
 
     if "Referees" in data_name or "Players" in data_name:
         pdf_style_file = css_folder_path + "Referees.css"
-    elif "Teams" in data_name:
+    elif "Team" in data_name:
         pdf_style_file = css_folder_path + "Teams.css"
     else:
         pdf_style_file = css_folder_path + "Matches.css"
@@ -167,15 +167,7 @@ def create_data(normalized_json_data, data_name):
     store_data(data_name.replace(' ', ''), data_frame)
 
 
-def compose_data(response, data_name, normalized_json_data):
-
-    if not normalized_json_data:
-        normalized_json_data = pd.json_normalize(response[data_name])
-
-    create_data(normalized_json_data, data_name)
-
-
-def separateRefereesFromMatches(response):
+def separate_referees_from_matches(response):
 
     all_referees = {}
     for match in response['matches']:
@@ -191,26 +183,26 @@ def separateRefereesFromMatches(response):
 
 def save_referees_from_matches(responseMatches, data_name):
 
-    normalized_json_referees = separateRefereesFromMatches(responseMatches)
+    normalized_json_referees = separate_referees_from_matches(responseMatches)
     
-    compose_data({}, data_name + "Referees", normalized_json_referees)
+    create_data(normalized_json_referees, data_name + "Referees")
 
 
-def save_team_data(team_id, team_name):
+def save_match_data(team_id, team_name):
 
     responseMatches = get_data_response('/v2/teams/' + str(team_id) + '/matches')
 
-    save_referees_from_matches(responseMatches, team_name)
+    save_referees_from_matches(responseMatches, team_name + "Matches")
 
     normalized_json_data = pd.json_normalize(responseMatches['matches'])
 
-    create_data(normalized_json_data, team_name)
+    create_data(normalized_json_data, team_name + "Matches")
 
 
-def save_teams_data(firstTeam, secondTeam):
+def save_matches_data(firstTeam, secondTeam):
 
-    save_team_data(get_team_ids_for_team_name(firstTeam), firstTeam.replace(' ', ''))
-    save_team_data(get_team_ids_for_team_name(secondTeam), secondTeam.replace(' ', ''))
+    save_match_data(get_team_ids_for_team_name(firstTeam), firstTeam.replace(' ', ''))
+    save_match_data(get_team_ids_for_team_name(secondTeam), secondTeam.replace(' ', ''))
 
 
 def save_teams():
@@ -220,17 +212,6 @@ def save_teams():
     normalized_json_data = pd.json_normalize(responseTeams['teams'])
 
     create_data(normalized_json_data, 'PremierLeagueTeams')
-
-
-def export_teams_model():
-
-    model = get_model(join(rpt_folder_path, 'match.rpt'))
-
-    export_meta_model()
-
-    save_teams()
-    for report in model.reports:
-        save_teams_data(report.firstTeam, report.secondTeam)
 
 
 def save_player_matches(id):
@@ -262,6 +243,59 @@ def export_players_model(player_id):
     export_meta_model()
 
 
+def set_active_competition_from_team(responseTeam):
+
+    activeCompetitions = pd.json_normalize(responseTeam["activeCompetitions"])
+
+    df_activeCompetitions = pd.DataFrame.from_dict(activeCompetitions)
+
+    if not df_activeCompetitions.empty:
+        responseTeam["activeCompetitions"] = next((activeCompetition['name'] for activeCompetition in responseTeam["activeCompetitions"]), None)
+
+
+def set_squads_from_team(responseTeam):
+
+    squads = pd.json_normalize(responseTeam["squad"])
+
+    df_squads = pd.DataFrame.from_dict(squads)
+
+    if not df_squads.empty:
+        responseTeam["squad"] = next((squad['name'] for squad in responseTeam["squad"]), None)
+
+
+def save_team_data(team_id, team_name):
+    
+    responseTeam = get_data_response('/v2/teams/' + str(team_id))
+
+    set_active_competition_from_team(responseTeam)
+    set_squads_from_team(responseTeam)
+    
+    normalized_json_data = pd.json_normalize(responseTeam)
+    create_data(normalized_json_data, team_name.replace(' ', '') + 'Team')
+    
+
+def export_teams_model():
+
+    model = get_model(join(rpt_folder_path, 'team.rpt'))
+
+    export_meta_model()
+    
+    save_teams()
+
+    for report in model.reports:
+        save_team_data(get_team_ids_for_team_name(report.teamName), report.teamName)
+
+
+def export_matches_model():
+
+    model = get_model(join(rpt_folder_path, 'match.rpt'))
+
+    export_meta_model()
+
+    for report in model.reports:
+        save_matches_data(report.firstTeam, report.secondTeam)
+
+
 if __name__ == "__main__":
 
     create_data_folders()
@@ -272,4 +306,6 @@ if __name__ == "__main__":
     else:
         export_players_model(player_id)
 
-        export_teams_model()
+    export_teams_model()
+    export_matches_model()
+    
