@@ -22,6 +22,7 @@ all_files_folder_path = "files/"
 csv_folder_path = all_files_folder_path + "csv_files/"
 html_folder_path = all_files_folder_path + "html_files/"
 pdf_folder_path = all_files_folder_path + "pdf_files/"
+database_password = "root"
 
 
 def export_teams_model():
@@ -38,10 +39,24 @@ def export_teams_model():
 
     metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
 
+def export_player_model():
+
+    current_dir = dirname(__file__)
+
+    meta_model = metamodel_from_file(join(current_dir, 'reporter.tx'), debug=False)
+
+    model = meta_model.model_from_file('player1.rpt')
+
+    for report in model.reports:
+        get_player_first_name(report.name + " " + report.surname)
+        get_player_last_name(report.name + " " + report.surname)
+
+    metamodel_export(meta_model, join(current_dir, 'reporter.dot'))
+
 
 def get_team_id(team_name):
 
-    connection = create_engine("postgresql://postgres:root@localhost/jsd").connect()
+    connection = create_engine("postgresql://postgres:" + database_password + "@localhost/jsd").connect()
     metadata = db.MetaData()
     teamResponse = get_data_response('/v2/competitions/PL/teams/')
     normalized_json_data = pd.json_normalize(teamResponse["teams"])
@@ -60,6 +75,41 @@ def get_team_id(team_name):
         return -1
 
 
+def get_player_name(player_id):
+
+    engine = create_engine("postgresql://postgres:" + database_password + "@localhost/jsd")
+    
+    connection = engine.connect()
+    metadata = db.MetaData()
+    player = db.Table('PremierLeaguePlayer', metadata, autoload=True, autoload_with=engine)
+
+    query = db.select([player.columns.name]).where(player.columns.id == player_id)
+
+    try:
+        player_name = connection.execute(query).fetchall()[0][0]
+        print(player_name)
+        return player_name
+    except:
+        return -1
+
+
+def get_player_first_name(player_name):
+
+    player_name_part = player_name.split(" ")
+
+    return player_name_part[0]
+
+
+def get_player_last_name(player_name):
+
+    player_name_part = player_name.split(" ")
+
+    if (len(player_name_part) == 2):
+        return player_name_part[1]
+
+    return ""
+    
+
 def save_team_data(team_id, team_name):
 
     teamResponse = get_data_response('/v2/teams/' + str(team_id) + '/matches')
@@ -70,7 +120,7 @@ def save_team_data(team_id, team_name):
 
     create_files(team_name, data_frame)
 
-    #store_data(team_name.replace(' ', ''), data_frame)
+   # store_data(team_name.replace(' ', ''), data_frame)
 
 
 def load_json(connection):
@@ -118,6 +168,16 @@ def get_data_response(request_path):
     return response
 
 
+def get_player_matches_responses(id):
+    connection = http.client.HTTPConnection('api.football-data.org')
+    headers = { 'X-Auth-Token': '168f3965594844d190db11b5388f9085' }
+
+    connection.request('GET', '/v2/players/' + str(id) + '/matches', None, headers )
+    responsePlayerMatches = load_json(connection)
+
+    return responsePlayerMatches
+
+
 def set_pdf_styling(data_name):
 
     if data_name == 'referees':
@@ -159,7 +219,7 @@ def create_files(data_name, data_frame):
 
 def store_data(table_name, df):
 
-    con = create_engine("postgresql://postgres:root@localhost/jsd").connect()
+    con = create_engine("postgresql://postgres:" + database_password + "@localhost/jsd").connect()
 
     df.to_sql(table_name, con, if_exists='replace', index='False')
 
@@ -176,25 +236,54 @@ def compose_data(response, data_name, normalized_json_data):
     store_data(data_name.replace(' ', ''), data_frame)
 
 
-def get_data():
+def get_data(player_id):
 
     responseTeams = get_data_response('/v2/competitions/PL/teams/')
     responseMatches = get_data_response('/v2/teams/66/matches')
     responseMatches, normalized_json_referees = separateRefereesFromMatches(responseMatches)
+    responsePlayers = get_data_response('/v2/players/' + str(player_id))
 
     compose_data(responseMatches, "matches", {})
     compose_data(responseTeams, "teams", {})
+
+    data_name = "players"
+    normalized_json_data = pd.json_normalize(responsePlayers)
+    data_frame = pd.DataFrame.from_dict(normalized_json_data)
+    create_files(data_name, data_frame)
+    store_data(data_name.replace(' ', ''), data_frame)
+
     compose_data({}, "referees", normalized_json_referees)
+
+
+def get_player_matches_data(id):
+
+    responsePlayerMatches = get_player_matches_responses(id)
+
+    for match in responsePlayerMatches['matches']:
+        referees = pd.json_normalize(match["referees"])
+        df_referees = pd.DataFrame.from_dict(referees)
+        if not df_referees.empty:
+            match['referees'] = next((referee['name'] for referee in match['referees'] if referee['role'] == 'REFEREE'), None)
+
+    new_dict_matches = pd.json_normalize(responsePlayerMatches['matches'])
+    df_player_matches = pd.DataFrame.from_dict(new_dict_matches)
+    df_player_matches.to_csv(all_files_folder_path+ "csv_files/player_matches.csv")
+    df_player_matches.to_html(all_files_folder_path+ "/html_files/player_matches.html")
+    store_data("PremierLeaguePlayerMatches", df_player_matches)
 
 
 if __name__ == "__main__":
 
     create_data_folders()
 
-    export_teams_model()
+    player_id = input("Enter positive number: ")
+    if not player_id.isnumeric():
+        print("You must input positive number!")
+    else:
+        get_player_matches_data(player_id)
 
-    get_data()
+        export_teams_model()
 
+        export_player_model()
 
-
-
+        get_data(player_id)
