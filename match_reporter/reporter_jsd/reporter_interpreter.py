@@ -18,10 +18,13 @@ import csv
 
 
 css_folder_path = "css/"
-all_files_folder_path = "files/"
+rpt_folder_path = "rpt/"
+tx_folder_path = "tx/"
+all_files_folder_path = "generated_files/"
 csv_folder_path = all_files_folder_path + "csv_files/"
 html_folder_path = all_files_folder_path + "html_files/"
 pdf_folder_path = all_files_folder_path + "pdf_files/"
+dot_folder_path = all_files_folder_path + "dot_files/"
 database_password = "root"
 
 
@@ -38,13 +41,16 @@ def create_data_folders():
     create_folder(html_folder_path)
     create_folder(pdf_folder_path)
     create_folder(css_folder_path)
+    create_folder(rpt_folder_path)
+    create_folder(dot_folder_path)
+    create_folder(tx_folder_path)
 
 
 def get_meta_model():
 
     current_dir = dirname(__file__)
 
-    meta_model = metamodel_from_file(join(current_dir, 'reporter.tx'), debug=False)
+    meta_model = metamodel_from_file(join(current_dir, join(tx_folder_path, 'reporter.tx')), debug=False)
 
     return meta_model
 
@@ -62,7 +68,7 @@ def export_meta_model():
 
     meta_model = get_meta_model()
 
-    metamodel_export(meta_model, join(dirname(__file__), 'reporter.dot'))
+    metamodel_export(meta_model, join(dirname(__file__), join(dot_folder_path, 'reporter.dot')))
 
 
 def create_connection():
@@ -207,21 +213,24 @@ def save_teams_data(firstTeam, secondTeam):
     save_team_data(get_team_ids_for_team_name(secondTeam), secondTeam.replace(' ', ''))
 
 
+def save_teams():
+
+    responseTeams = get_data_response('/v2/competitions/PL/teams/')
+
+    normalized_json_data = pd.json_normalize(responseTeams['teams'])
+
+    create_data(normalized_json_data, 'PremierLeagueTeams')
+
+
 def export_teams_model():
 
-    model = get_model('example1.rpt')
+    model = get_model(join(rpt_folder_path, 'match.rpt'))
 
     export_meta_model()
 
+    save_teams()
     for report in model.reports:
         save_teams_data(report.firstTeam, report.secondTeam)
-
-
-def export_players_model():
-
-    get_model('player1.rpt')
-
-    export_meta_model()
 
 
 def save_player_matches(id):
@@ -234,15 +243,6 @@ def save_player_matches(id):
     create_data(normalized_json_data, "PremierLeaguePlayerMatches")
 
 
-def save_teams():
-
-    responseTeams = get_data_response('/v2/competitions/PL/teams/')
-
-    normalized_json_data = pd.json_normalize(responseTeams['teams'])
-
-    create_data(normalized_json_data, 'PremierLeagueTeams')
-
-
 def save_players(player_id):
 
     responsePlayers = get_data_response('/v2/players/' + str(player_id))
@@ -250,6 +250,16 @@ def save_players(player_id):
     normalized_json_data = pd.json_normalize(responsePlayers)
     
     create_data(normalized_json_data, 'PremierLeaguePlayers')
+
+    
+def export_players_model(player_id):
+    
+    save_player_matches(player_id)
+    save_players(player_id)
+
+    get_model(join(rpt_folder_path, 'player.rpt'))
+
+    export_meta_model()
 
 
 if __name__ == "__main__":
@@ -260,9 +270,6 @@ if __name__ == "__main__":
     if not player_id.isnumeric():
         print("You must input positive number!")
     else:
-        save_player_matches(player_id)
-        save_players(player_id)
-        export_players_model()
+        export_players_model(player_id)
 
-        save_teams()
         export_teams_model()
