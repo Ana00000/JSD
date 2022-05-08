@@ -79,6 +79,6 @@ def generate():
     create_data_folders()
 
     for csv_file_name in os.listdir(csv_folder_path):
-        data_name = csv_file_name.replace('.csv', '')
-
-        generate_files_from_data(data_name)
+        if '.csv' in csv_file_name: 
+            data_name = csv_file_name.replace('.csv', '')
+            generate_files_from_data(data_name)

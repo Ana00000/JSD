@@ -302,7 +302,7 @@ if __name__ == "__main__":
     create_data_folders()
 
     
-    export_players_model()
+    #export_players_model()
 
     export_teams_model()
     export_matches_model()

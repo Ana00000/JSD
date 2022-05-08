@@ -4,5 +4,6 @@ env/
 .\env
 
 match_reporter/reporter_jsd/generated_files/
-match_reporter/reporter_jsd/__pycache__/
-match_reporter/match_reporter.egg-info/
+match_reporter/reporter_jsd/__pycache__/*
+match_reporter/match_reporter.egg-info/*
+.DS_store
