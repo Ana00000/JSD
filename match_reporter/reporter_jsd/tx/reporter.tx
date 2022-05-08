@@ -18,7 +18,7 @@ Team:
 ;
 
 Player:
-  'Player: Name-' name=STRING ', Surname-' surname=STRING
+  'Player: Name-' name=STRING ', Club-' club=STRING
 ;
 
 Filter: 
