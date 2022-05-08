@@ -6,6 +6,7 @@ Home-page: UNKNOWN
 Author: /
 Author-email: /
 License: MIT
+Description: UNKNOWN
 Keywords: textX
 Platform: UNKNOWN
 Classifier: Development Status :: 2 - Pre-Alpha
@@ -25,9 +26,5 @@ Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Operating System :: OS Independent
 Description-Content-Type: text/markdown
-Provides-Extra: dev
 Provides-Extra: test
-License-File: LICENSE
-
-UNKNOWN
-
+Provides-Extra: dev
