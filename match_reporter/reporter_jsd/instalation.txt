@@ -1,0 +1,7 @@
+mkdocs==1.2.1
+numpy==1.22.3
+pandas==1.4.2
+pdfkit==0.6.1
+psycopg2==2.8.6
+textX==2.3.0
+textX-dev==0.1.5

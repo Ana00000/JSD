@@ -19,7 +19,6 @@ import csv
 
 css_folder_path = "css/"
 rpt_folder_path = "rpt/"
-tx_folder_path = "tx/"
 all_files_folder_path = "generated_files/"
 csv_folder_path = all_files_folder_path + "csv_files/"
 html_folder_path = all_files_folder_path + "html_files/"
@@ -43,14 +42,13 @@ def create_data_folders():
     create_folder(css_folder_path)
     create_folder(rpt_folder_path)
     create_folder(dot_folder_path)
-    create_folder(tx_folder_path)
 
 
 def get_meta_model():
 
     current_dir = dirname(__file__)
 
-    meta_model = metamodel_from_file(join(current_dir, join(tx_folder_path, 'reporter.tx')), debug=False)
+    meta_model = metamodel_from_file(join(current_dir, 'reporter.tx'), debug=False)
 
     return meta_model
 
@@ -80,44 +78,9 @@ def create_connection():
     return connection
 
 
-def set_pdf_styling(data_name):
-
-    if "Referees" in data_name or "Players" in data_name:
-        pdf_style_file = css_folder_path + "Referees.css"
-    elif "Team" in data_name:
-        pdf_style_file = css_folder_path + "Teams.css"
-    else:
-        pdf_style_file = css_folder_path + "Matches.css"
-
-    return pdf_style_file
-
-
-def set_pdf_options(data_name):
-
-    pdf_style_file = set_pdf_styling(data_name)
-
-    return {
-        'encoding': "UTF-8",
-        'user-style-sheet': pdf_style_file
-    }
-
-
-def create_pdf(data_name):
-
-    from_file = join(html_folder_path, data_name + ".html")
-    to_file = join(pdf_folder_path, data_name + ".pdf")
-    options = set_pdf_options(data_name)
-
-    pdfkit.from_file(from_file, to_file, options)
-
-
-def create_files(data_name, data_frame):
+def create_csv(data_name, data_frame):
 
     data_frame.to_csv(csv_folder_path + data_name + ".csv")
-
-    data_frame.to_html(html_folder_path + data_name + ".html")
-
-    create_pdf(data_name)
 
 
 def store_data(table_name, data_frame):
@@ -162,7 +125,7 @@ def create_data(normalized_json_data, data_name):
 
     data_frame = pd.DataFrame.from_dict(normalized_json_data)
 
-    create_files(data_name, data_frame)
+    create_csv(data_name, data_frame)
 
     store_data(data_name.replace(' ', ''), data_frame)
 
