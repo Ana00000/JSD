@@ -1,5 +1,6 @@
 from os import mkdir
 from os.path import join, dirname, exists
+from pkgutil import get_data
 from signal import SIG_DFL
 from textx import metamodel_from_file
 from textx.export import metamodel_export, model_export_to_file
@@ -295,16 +296,50 @@ def export_matches_model():
     for report in model.reports:
         save_matches_data(report.firstTeam, report.secondTeam)
 
+def save_pl_player():
+    model = get_model(join(rpt_folder_path, 'player.rpt'))
+
+
+    export_meta_model()
+
+    team_id = get_team_ids_for_team_name(model.reports[0].club)
+
+    responseSquad = get_data_response('/v2/teams/' + str(team_id))
+
+    requested_player = -1
+
+    for player in responseSquad['squad']:
+        if player['name'] == model.reports[0].name:
+            requested_player = player
+            break
+
+    response_matches = get_data_response('/v2/players/' + str(requested_player['id']) + '/matches')
+
+    separate_referees_from_matches(response_matches)
+
+    normalized_player = pd.json_normalize(requested_player)
+    
+    normalized_player_matches = pd.json_normalize(response_matches['matches'])
+
+    df_player = pd.DataFrame.from_dict(normalized_player_matches)
+
+    #with open("matches.txt", "w") as teams_file:
+    #    teams_file.write(df_player.to_string())
+
+    print(normalized_player_matches)
+
+    create_data(normalized_player, requested_player['name'])
+    create_data(normalized_player_matches, requested_player['name'] + 'Matches')
+
 
 if __name__ == "__main__":
 
+    save_pl_player()
+
     create_data_folders()
 
-    player_id = input("Enter positive number: ")
-    if not player_id.isnumeric():
-        print("You must input positive number!")
-    else:
-        export_players_model(player_id)
+    
+    export_players_model()
 
     export_teams_model()
     export_matches_model()
