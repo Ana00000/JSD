@@ -238,41 +238,24 @@ def save_team_data(team_id, team_name):
     create_data(normalized_json_data, team_name.replace(' ', '') + 'Team')
     
 
-def export_teams_model():
-
-    model = get_model(join(rpt_folder_path, 'team.rpt'))
-
-    export_meta_model()
-    
-    save_teams()
-
-    for report in model.reports:
-        save_team_data(get_team_ids_for_team_name(report.teamName), report.teamName)
+def export_teams_model(report):
+    save_team_data(get_team_ids_for_team_name(report.teamName), report.teamName)
+    save_match_data(get_team_ids_for_team_name(report.teamName), report.teamName.replace(' ', ''))
 
 
-def export_matches_model():
+def export_matches_model(report):
+    save_matches_data(report.firstTeam, report.secondTeam)
 
-    model = get_model(join(rpt_folder_path, 'match.rpt'))
+def export_player_model(report):
 
-    export_meta_model()
-
-    for report in model.reports:
-        save_matches_data(report.firstTeam, report.secondTeam)
-
-def save_pl_player():
-    model = get_model(join(rpt_folder_path, 'player.rpt'))
-
-
-    export_meta_model()
-
-    team_id = get_team_ids_for_team_name(model.reports[0].club)
+    team_id = get_team_ids_for_team_name(report.club)
 
     responseSquad = get_data_response('/v2/teams/' + str(team_id))
 
     requested_player = -1
 
     for player in responseSquad['squad']:
-        if player['name'] == model.reports[0].name:
+        if player['name'] == report.name:
             requested_player = player
             break
 
@@ -289,21 +272,32 @@ def save_pl_player():
     #with open("matches.txt", "w") as teams_file:
     #    teams_file.write(df_player.to_string())
 
-    print(normalized_player_matches)
+    #print(normalized_player_matches)
 
     create_data(normalized_player, requested_player['name'])
     create_data(normalized_player_matches, requested_player['name'] + 'Matches')
 
+    
+
+def interpret(model):
+
+    for report in model.reports:
+        if report.__class__.__name__ == "Team":
+            export_teams_model(report)
+        elif report.__class__.__name__ == "Match":
+            export_matches_model(report)
+        elif report.__class__.__name__ == "Player":
+            export_player_model(report)
+
+    
 
 if __name__ == "__main__":
 
-    save_pl_player()
+    save_teams()
 
-    create_data_folders()
+    model = get_model(join(rpt_folder_path, 'player.rpt'))
 
-    
-    #export_players_model()
+    export_meta_model()
 
-    export_teams_model()
-    export_matches_model()
+    interpret(model)
     
