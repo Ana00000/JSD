@@ -1,3 +1,4 @@
+from operator import or_
 from os import mkdir
 from os.path import join, dirname, exists
 from pkgutil import get_data
@@ -13,6 +14,7 @@ import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import sqlalchemy as db
+from sqlalchemy import or_
 import pdfkit
 import html
 import csv
@@ -98,8 +100,13 @@ def get_team_ids_for_team_name(team_name):
     connection = create_connection()
 
     teams_columns = db.Table('PremierLeagueTeams', db.MetaData(), autoload=True, autoload_with=connection).columns
-    query = db.select([teams_columns.id]).where(teams_columns.shortName == team_name)
-    team_ids = connection.execute(query).fetchall()[0][0]
+    query = db.select([teams_columns.id]).where(or_(teams_columns.shortName == team_name, teams_columns.name == team_name))
+    team_ids = -1
+
+    try:
+        team_ids = connection.execute(query).fetchall()[0][0]
+    except:
+        print("Nije ok")
 
     connection.close()
 
@@ -295,7 +302,7 @@ if __name__ == "__main__":
 
     save_teams()
 
-    model = get_model(join(rpt_folder_path, 'player.rpt'))
+    model = get_model(join(rpt_folder_path, 'team.rpt'))
 
     export_meta_model()
 
