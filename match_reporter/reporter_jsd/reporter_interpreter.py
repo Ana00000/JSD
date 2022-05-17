@@ -245,15 +245,15 @@ def save_team_data(team_id, team_name):
     create_data(normalized_json_data, team_name.replace(' ', '') + 'Team')
     
 
-def export_teams_model(report):
+def export_teams_model(report, filter):
     save_team_data(get_team_ids_for_team_name(report.teamName), report.teamName)
     save_match_data(get_team_ids_for_team_name(report.teamName), report.teamName.replace(' ', ''))
 
 
-def export_matches_model(report):
+def export_matches_model(report, filter):
     save_matches_data(report.firstTeam, report.secondTeam)
 
-def export_player_model(report):
+def export_player_model(report, filter):
 
     team_id = get_team_ids_for_team_name(report.club)
 
@@ -288,13 +288,19 @@ def export_player_model(report):
 
 def interpret(model):
 
+    if model.filters:
+        filter = model.filters
+    else:
+        filter = -1
+    
     for report in model.reports:
         if report.__class__.__name__ == "Team":
-            export_teams_model(report)
+            export_teams_model(report, filter)
         elif report.__class__.__name__ == "Match":
-            export_matches_model(report)
+            export_matches_model(report, filter)
         elif report.__class__.__name__ == "Player":
-            export_player_model(report)
+            export_player_model(report, filter)
+
 
     
 

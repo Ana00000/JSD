@@ -22,23 +22,11 @@ Player:
 ;
 
 Filter: 
-  Goal | PlayerName | MatchDate
+  'Filter by date: '
+  'from-' dateFrom=STRING 
+  ', to-' dateTo=STRING 
 ;
 
-Goal:
-  'Filter by goal: min-' goalMin=INT
-  ', max-' goalMax=INT 
-;
-
-PlayerName:
-  'Filter by player name: ' playerName=STRING
-;
-
-MatchDate:
-  'Filter by match date: '
-  'from-' matchDateFrom=STRING 
-  ', to-' matchDateTo=STRING 
-;
 
 Comment:
   /\/\/.*$/
