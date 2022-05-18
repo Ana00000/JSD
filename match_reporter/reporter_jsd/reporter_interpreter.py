@@ -292,17 +292,19 @@ def export_player_model(report, filter):
 def interpret(model):
 
     filter = ''
+
     if model.filters:
         filters = model.filters
         filter = '?'
         for f in filters: 
             if filter != '?':
                 filter = filter + '&'            
-
             if 'MatchDate' in str(f):
                 filter = filter + 'dateFrom=' + f.matchDateFrom + '&dateTo=' + f.matchDateTo
             if 'Status' in str(f):
                 filter = filter + 'status=' + f.status
+            if 'Limit' in str(f):
+                filter = filter + 'limit=' + f.limit
 
     for report in model.reports:
         if report.__class__.__name__ == "Team":

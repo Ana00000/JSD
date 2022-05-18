@@ -22,7 +22,7 @@ Player:
 ;
 
 Filter: 
-  MatchDate | Status
+  MatchDate | Status | Limit
 ;
 
 MatchDate:
@@ -33,6 +33,10 @@ MatchDate:
 
 Status:
   'Filter by status: ' status=STRING 
+;
+
+Limit:
+  'Limit: ' limit=STRING 
 ;
 
 Comment:
