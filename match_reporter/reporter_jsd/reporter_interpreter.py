@@ -52,7 +52,7 @@ def get_meta_model():
     current_dir = dirname(__file__)
 
     meta_model = metamodel_from_file(join(current_dir, 'reporter.tx'), debug=False)
-
+    
     return meta_model
 
 
@@ -141,6 +141,10 @@ def create_data(normalized_json_data, data_name):
 def separate_referees_from_matches(response):
 
     all_referees = {}
+
+    if response == None or 'matches' not in response:
+        return all_referees
+
     for match in response['matches']:
         referees = pd.json_normalize(match["referees"])
         df_referees = pd.DataFrame.from_dict(referees)
@@ -159,10 +163,10 @@ def save_referees_from_matches(responseMatches, data_name):
     create_data(normalized_json_referees, data_name + "Referees")
 
 
-def save_match_data(team_id, team_name):
-
-    responseMatches = get_data_response('/v2/teams/' + str(team_id) + '/matches')
-
+def save_match_data(team_id, team_name, filter):
+    
+    
+    responseMatches = get_data_response('/v2/teams/' + str(team_id) + '/matches' + filter)
     save_referees_from_matches(responseMatches, team_name + "Matches")
 
     normalized_json_data = pd.json_normalize(responseMatches['matches'])
@@ -170,16 +174,15 @@ def save_match_data(team_id, team_name):
     create_data(normalized_json_data, team_name + "Matches")
 
 
-def save_matches_data(firstTeam, secondTeam):
+def save_matches_data(firstTeam, secondTeam, filter):
 
-    save_match_data(get_team_ids_for_team_name(firstTeam), firstTeam.replace(' ', ''))
-    save_match_data(get_team_ids_for_team_name(secondTeam), secondTeam.replace(' ', ''))
+    save_match_data(get_team_ids_for_team_name(firstTeam), firstTeam.replace(' ', ''), filter)
+    save_match_data(get_team_ids_for_team_name(secondTeam), secondTeam.replace(' ', ''), filter)
 
 
 def save_teams():
 
     responseTeams = get_data_response('/v2/competitions/PL/teams/')
-
     normalized_json_data = pd.json_normalize(responseTeams['teams'])
 
     create_data(normalized_json_data, 'PremierLeagueTeams')
@@ -234,9 +237,9 @@ def set_squads_from_team(responseTeam):
         responseTeam["squad"] = next((squad['name'] for squad in responseTeam["squad"]), None)
 
 
-def save_team_data(team_id, team_name):
+def save_team_data(team_id, team_name, filter):
     
-    responseTeam = get_data_response('/v2/teams/' + str(team_id))
+    responseTeam = get_data_response('/v2/teams/' + str(team_id) + filter)
 
     set_active_competition_from_team(responseTeam)
     set_squads_from_team(responseTeam)
@@ -246,18 +249,18 @@ def save_team_data(team_id, team_name):
     
 
 def export_teams_model(report, filter):
-    save_team_data(get_team_ids_for_team_name(report.teamName), report.teamName)
-    save_match_data(get_team_ids_for_team_name(report.teamName), report.teamName.replace(' ', ''))
+    save_team_data(get_team_ids_for_team_name(report.teamName), report.teamName, filter)
+    save_match_data(get_team_ids_for_team_name(report.teamName), report.teamName.replace(' ', ''), filter)
 
 
 def export_matches_model(report, filter):
-    save_matches_data(report.firstTeam, report.secondTeam)
+    save_matches_data(report.firstTeam, report.secondTeam, filter)
 
 def export_player_model(report, filter):
 
     team_id = get_team_ids_for_team_name(report.club)
 
-    responseSquad = get_data_response('/v2/teams/' + str(team_id))
+    responseSquad = get_data_response('/v2/teams/' + str(team_id) + filter)
 
     requested_player = -1
 
@@ -266,7 +269,7 @@ def export_player_model(report, filter):
             requested_player = player
             break
 
-    response_matches = get_data_response('/v2/players/' + str(requested_player['id']) + '/matches')
+    response_matches = get_data_response('/v2/players/' + str(requested_player['id']) + '/matches' + filter)
 
     separate_referees_from_matches(response_matches)
 
@@ -288,11 +291,17 @@ def export_player_model(report, filter):
 
 def interpret(model):
 
+    filter = ''
     if model.filters:
-        filter = model.filters
-    else:
-        filter = -1
-    
+        filters = model.filters
+        filter = '?'
+        for f in filters: 
+            if filter != '?':
+                filter = filter + '&'            
+
+            if 'MatchDate' in str(f):
+                filter = filter + 'dateFrom=' + f.matchDateFrom + '&dateTo=' + f.matchDateTo
+
     for report in model.reports:
         if report.__class__.__name__ == "Team":
             export_teams_model(report, filter)
@@ -301,15 +310,13 @@ def interpret(model):
         elif report.__class__.__name__ == "Player":
             export_player_model(report, filter)
 
-
     
 
 if __name__ == "__main__":
 
     save_teams()
 
-    model = get_model(join(rpt_folder_path, 'team.rpt'))
-
+    model = get_model(join(rpt_folder_path, 'player.rpt'))
     export_meta_model()
 
     interpret(model)

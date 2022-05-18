@@ -22,9 +22,13 @@ Player:
 ;
 
 Filter: 
-  'Filter by date: '
-  'from-' dateFrom=STRING 
-  ', to-' dateTo=STRING 
+  MatchDate 
+;
+
+MatchDate:
+  'Filter by match date: '
+  'from-' matchDateFrom=STRING 
+  ', to-' matchDateTo=STRING 
 ;
 
 
