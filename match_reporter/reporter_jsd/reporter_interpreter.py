@@ -301,6 +301,8 @@ def interpret(model):
 
             if 'MatchDate' in str(f):
                 filter = filter + 'dateFrom=' + f.matchDateFrom + '&dateTo=' + f.matchDateTo
+            if 'Status' in str(f):
+                filter = filter + 'status=' + f.status
 
     for report in model.reports:
         if report.__class__.__name__ == "Team":

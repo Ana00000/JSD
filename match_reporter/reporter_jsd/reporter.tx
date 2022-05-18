@@ -22,7 +22,7 @@ Player:
 ;
 
 Filter: 
-  MatchDate 
+  MatchDate | Status
 ;
 
 MatchDate:
@@ -31,6 +31,9 @@ MatchDate:
   ', to-' matchDateTo=STRING 
 ;
 
+Status:
+  'Filter by status: ' status=STRING 
+;
 
 Comment:
   /\/\/.*$/
