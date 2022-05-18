@@ -305,6 +305,8 @@ def interpret(model):
                 filter = filter + 'status=' + f.status
             if 'Limit' in str(f):
                 filter = filter + 'limit=' + f.limit
+            if 'Matchday' in str(f):
+                filter = filter + 'matchday=' + f.matchday
 
     for report in model.reports:
         if report.__class__.__name__ == "Team":
