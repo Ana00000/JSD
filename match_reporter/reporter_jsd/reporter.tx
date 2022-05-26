@@ -22,22 +22,25 @@ Player:
 ;
 
 Filter: 
-  Goal | PlayerName | MatchDate
-;
-
-Goal:
-  'Filter by goal: min-' goalMin=INT
-  ', max-' goalMax=INT 
-;
-
-PlayerName:
-  'Filter by player name: ' playerName=STRING
+  MatchDate | Status | Limit | Matchday
 ;
 
 MatchDate:
   'Filter by match date: '
   'from-' matchDateFrom=STRING 
   ', to-' matchDateTo=STRING 
+;
+
+Status:
+  'Filter by status: ' status=STRING 
+;
+
+Limit:
+  'Limit: ' limit=STRING 
+;
+
+Matchday:
+  'Matchday: ' matchday=STRING 
 ;
 
 Comment:

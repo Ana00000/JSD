@@ -11,34 +11,37 @@
     edge[dir=black,arrowtail=empty]
 
 
-4671202176[ label="{Program|}"]
+140193891553136[ label="{Program|}"]
 
-4671205008[ label="{*Report|}"]
+140193891556544[ label="{*Report|}"]
 
-4671208416[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
+140193891559952[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
 
-4671211824[ label="{Team|teamName: STRING\l}"]
+140193891563360[ label="{Team|teamName: STRING\l}"]
 
-4671215232[ label="{Player|name: STRING\lclub: STRING\l}"]
+140193891566768[ label="{Player|name: STRING\lclub: STRING\l}"]
 
-4671218640[ label="{*Filter|}"]
+140193891570176[ label="{*Filter|}"]
 
-4671222048[ label="{Goal|goalMin: INT\lgoalMax: INT\l}"]
+140193891573584[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
 
-4671225456[ label="{PlayerName|playerName: STRING\l}"]
+140193891576992[ label="{Status|status: STRING\l}"]
 
-4671228864[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
+140193891580400[ label="{Limit|limit: STRING\l}"]
+
+140193891583808[ label="{Matchday|matchday: STRING\l}"]
 
 
 
-4671202176 -> 4671205008[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
-4671202176 -> 4671218640[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
-4671205008 -> 4671208416 [dir=back]
-4671205008 -> 4671211824 [dir=back]
-4671205008 -> 4671215232 [dir=back]
-4671218640 -> 4671222048 [dir=back]
-4671218640 -> 4671225456 [dir=back]
-4671218640 -> 4671228864 [dir=back]
+140193891553136 -> 140193891556544[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
+140193891553136 -> 140193891570176[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
+140193891556544 -> 140193891559952 [dir=back]
+140193891556544 -> 140193891563360 [dir=back]
+140193891556544 -> 140193891566768 [dir=back]
+140193891570176 -> 140193891573584 [dir=back]
+140193891570176 -> 140193891576992 [dir=back]
+140193891570176 -> 140193891580400 [dir=back]
+140193891570176 -> 140193891583808 [dir=back]
 match_rules [ shape=plaintext, label=< <table>
 	<tr>
 		<td><b>Comment</b></td><td>\/\/.*$</td>

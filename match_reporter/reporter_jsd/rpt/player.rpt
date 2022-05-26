@@ -1,4 +1,9 @@
 begin 
     Player: Name- "Marcos Alonso", Club- "Chelsea"
     Team:  "Arsenal" 
+    Filter by match date: from-"2020-05-01", to-"2021-06-01"
+    Filter by status: "FINISHED"
+    Limit: "40"
+    Matchday: "13"
+
 end
