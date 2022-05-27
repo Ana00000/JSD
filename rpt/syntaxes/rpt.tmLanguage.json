@@ -1,31 +1,58 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "Reporter programming language",
+	"name": "Reporter Programming Language",
 	"patterns": [
 		{
 			"include": "#keywords"
 		},
 		{
+			"include": "#language_operation"
+		},
+		{
 			"include": "#strings"
+		},
+		{
+			"include": "#comment"
 		}
 	],
 	"repository": {
 		"keywords": {
-			"patterns": [{
+			"patterns": [
+			{
 				"name": "keyword.control.rpt",
-				"match": "\\b(if|while|for|return)\\b"
-			}]
+				"match": "(\\b(begin|end)\\b|\\b(Name|Club|from|to)\\b(-))|\\b(vs)\\b"
+			}
+		]
 		},
-		"strings": {
-			"name": "string.quoted.double.rpt",
-			"begin": "\"",
-			"end": "\"",
+		"comment": {
 			"patterns": [
 				{
-					"name": "constant.character.escape.rpt",
-					"match": "\\\\."
+					"name": "comment.line",
+          			"match": "//.*$"
 				}
 			]
+		},
+		"language_operation": {
+			"patterns": [
+				{
+					"name": "keyword.operator.new",
+          			"match": "(\\b(Team|Player|Match|Filter|date|status|Matchday|Limit)\\b(:)|(\\b(Filter|by|match)\\b))"
+				}
+			]
+		},
+		"strings": {
+		  "patterns": [
+			{
+			  "name": "string.quoted.single",
+			  "begin": "'",
+			  "end": "'"
+			},
+			{
+			  "name": "string.quoted.double",
+			  "begin": "\"",
+			  "end": "\""
+			}
+		  ]
 		}
 	},
 	"scopeName": "source.rpt"
