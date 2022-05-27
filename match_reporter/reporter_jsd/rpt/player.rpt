@@ -3,6 +3,5 @@ begin
     Team:  "Arsenal" 
     Filter by match date: from-"2020-05-01", to-"2021-09-01"
     Filter by status: "FINISHED"
-    Limit: "90"
 
 end

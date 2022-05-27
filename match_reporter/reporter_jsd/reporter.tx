@@ -22,7 +22,7 @@ Player:
 ;
 
 Filter: 
-  MatchDate | Status | Limit | Matchday
+  MatchDate | Status | Limit
 ;
 
 MatchDate:
@@ -37,10 +37,6 @@ Status:
 
 Limit:
   'Limit: ' limit=STRING 
-;
-
-Matchday:
-  'Matchday: ' matchday=STRING 
 ;
 
 Comment:
