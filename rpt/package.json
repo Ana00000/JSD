@@ -1,0 +1,25 @@
+{
+    "name": "rpt",
+    "displayName": "RPT",
+    "description": "Reporter Programming language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.67.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "rpt",
+            "aliases": ["Reporter programming language", "rpt"],
+            "extensions": [".rpt"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "rpt",
+            "scopeName": "source.rpt",
+            "path": "./syntaxes/rpt.tmLanguage.json"
+        }]
+    }
+}
