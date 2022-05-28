@@ -22,6 +22,7 @@ import csv
 
 css_folder_path = "css/"
 rpt_folder_path = "rpt/"
+j2_folder_path = "j2/"
 all_files_folder_path = "generated_files/"
 csv_folder_path = all_files_folder_path + "csv_files/"
 html_folder_path = all_files_folder_path + "html_files/"
@@ -40,6 +41,7 @@ def create_data_folders():
 
     create_folder(all_files_folder_path)
     create_folder(csv_folder_path)
+    create_folder(j2_folder_path)
     create_folder(html_folder_path)
     create_folder(pdf_folder_path)
     create_folder(css_folder_path)
@@ -319,6 +321,8 @@ def interpret(model):
 
 if __name__ == "__main__":
 
+    create_data_folders()
+    
     save_teams()
 
     model = get_model(join(rpt_folder_path, 'player.rpt'))

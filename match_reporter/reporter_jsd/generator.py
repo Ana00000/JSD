@@ -1,13 +1,14 @@
 import os
 from os import mkdir
-from os.path import join, exists
+from os.path import join, exists, dirname
 import pdfkit
 import pandas as pd
+import jinja2
 
 
-reporter_path = "match_reporter/reporter_jsd/"
-css_folder_path = reporter_path + "css/"
-all_files_folder_path = reporter_path + "generated_files/"
+css_folder_path = "css/"
+j2_folder_path = "j2/"
+all_files_folder_path = "generated_files/"
 csv_folder_path = all_files_folder_path + "csv_files/"
 html_folder_path = all_files_folder_path + "html_files/"
 pdf_folder_path = all_files_folder_path + "pdf_files/"
@@ -65,20 +66,53 @@ def create_pdf(data_name):
     options = set_pdf_options(data_name)
 
     pdfkit.from_file(from_file, to_file, options)
-    
+
 
 def generate_files_from_data(data_name):
+
+    data_name = data_name.replace('.csv', '')
 
     create_html(data_name)
 
     create_pdf(data_name)
 
 
-def generate():
+def generate_home_html():
+
+    home_file_path = join(html_folder_path, "Home.html")
+
+    with open(home_file_path, 'w') as f:
+        jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(j2_folder_path))
+        template = jinja_env.get_template('Home.j2')
+
+        f.write(template.render(title="Welcome to foodball reports", background=dirname(__file__) + '\\home.png'))
+
+
+def generate_match_and_team_files(model_path):
+
+    generated_files = 0
+
+    for csv_file_name in os.listdir(csv_folder_path):
+        model_name = model_path.split('\\')[-1][:-4]
+        if '.csv' in csv_file_name and model_name in csv_file_name.lower():
+            generated_files +=1
+            generate_files_from_data(csv_file_name)
+
+    return generated_files
+
+
+def generate_player_files():
+
+    for csv_file_name in os.listdir(csv_folder_path):
+        if '.csv' in csv_file_name and 'Matches' not in csv_file_name and 'Team' not in csv_file_name:
+            generate_files_from_data(csv_file_name)
+
+
+def generate(model_path):
 
     create_data_folders()
 
-    for csv_file_name in os.listdir(csv_folder_path):
-        if '.csv' in csv_file_name: 
-            data_name = csv_file_name.replace('.csv', '')
-            generate_files_from_data(data_name)
+    generate_home_html()
+
+    if generate_match_and_team_files(model_path) == 0:
+        generate_player_files()
