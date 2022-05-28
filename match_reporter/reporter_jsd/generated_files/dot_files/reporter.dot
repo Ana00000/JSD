@@ -1,0 +1,49 @@
+
+    digraph textX {
+    fontname = "Bitstream Vera Sans"
+    fontsize = 8
+    node[
+        shape=record,
+        style=filled,
+        fillcolor=aliceblue
+    ]
+    nodesep = 0.3
+    edge[dir=black,arrowtail=empty]
+
+
+2059727161184[ label="{Program|}"]
+
+2059727200832[ label="{*Report|}"]
+
+2059727204608[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
+
+2059727190448[ label="{Team|teamName: STRING\l}"]
+
+2059727222544[ label="{Player|name: STRING\lclub: STRING\l}"]
+
+2059727209328[ label="{*Filter|}"]
+
+2059727232928[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
+
+2059727211216[ label="{Status|status: STRING\l}"]
+
+2059727239536[ label="{Limit|limit: STRING\l}"]
+
+
+
+2059727161184 -> 2059727200832[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
+2059727161184 -> 2059727209328[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
+2059727200832 -> 2059727204608 [dir=back]
+2059727200832 -> 2059727190448 [dir=back]
+2059727200832 -> 2059727222544 [dir=back]
+2059727209328 -> 2059727232928 [dir=back]
+2059727209328 -> 2059727211216 [dir=back]
+2059727209328 -> 2059727239536 [dir=back]
+match_rules [ shape=plaintext, label=< <table>
+	<tr>
+		<td><b>Comment</b></td><td>\/\/.*$</td>
+	</tr>
+</table> >]
+
+
+}

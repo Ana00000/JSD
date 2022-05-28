@@ -1,0 +1,6 @@
+[textx_generators]
+reporter_gen = reporter_jsd:reporter_generate_files
+
+[textx_languages]
+reporter = reporter_jsd:reporter_language
+

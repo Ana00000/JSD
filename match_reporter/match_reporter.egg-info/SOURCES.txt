@@ -1,0 +1,13 @@
+LICENSE
+setup.cfg
+setup.py
+match_reporter.egg-info/PKG-INFO
+match_reporter.egg-info/SOURCES.txt
+match_reporter.egg-info/dependency_links.txt
+match_reporter.egg-info/entry_points.txt
+match_reporter.egg-info/not-zip-safe
+match_reporter.egg-info/requires.txt
+match_reporter.egg-info/top_level.txt
+reporter_jsd/__init__.py
+reporter_jsd/generator.py
+reporter_jsd/reporter_interpreter.py
