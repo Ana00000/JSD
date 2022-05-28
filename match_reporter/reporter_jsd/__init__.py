@@ -21,7 +21,7 @@ def reporter_language():
 
 
 @file_generator('reporter', 'html+pdf')
-def reporter_generate_files(metamodel, model, output_path, overwrite, debug): 
+def reporter_generate_files(metamodel, model, output_path, overwrite, debug, **custom_args): 
     "reporter generator"
-    generate()
+    generate(model._tx_filename)
     

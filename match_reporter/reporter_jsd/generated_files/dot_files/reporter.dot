@@ -11,37 +11,34 @@
     edge[dir=black,arrowtail=empty]
 
 
-140540676203824[ label="{Program|}"]
+2059727161184[ label="{Program|}"]
 
-140540676206656[ label="{*Report|}"]
+2059727200832[ label="{*Report|}"]
 
-140540676210064[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
+2059727204608[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
 
-140540676213472[ label="{Team|teamName: STRING\l}"]
+2059727190448[ label="{Team|teamName: STRING\l}"]
 
-140540676216880[ label="{Player|name: STRING\lclub: STRING\l}"]
+2059727222544[ label="{Player|name: STRING\lclub: STRING\l}"]
 
-140540676220288[ label="{*Filter|}"]
+2059727209328[ label="{*Filter|}"]
 
-140540676223696[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
+2059727232928[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
 
-140540676227104[ label="{Status|status: STRING\l}"]
+2059727211216[ label="{Status|status: STRING\l}"]
 
-140540676230512[ label="{Limit|limit: STRING\l}"]
-
-140540676233920[ label="{Matchday|matchday: STRING\l}"]
+2059727239536[ label="{Limit|limit: STRING\l}"]
 
 
 
-140540676203824 -> 140540676206656[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
-140540676203824 -> 140540676220288[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
-140540676206656 -> 140540676210064 [dir=back]
-140540676206656 -> 140540676213472 [dir=back]
-140540676206656 -> 140540676216880 [dir=back]
-140540676220288 -> 140540676223696 [dir=back]
-140540676220288 -> 140540676227104 [dir=back]
-140540676220288 -> 140540676230512 [dir=back]
-140540676220288 -> 140540676233920 [dir=back]
+2059727161184 -> 2059727200832[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
+2059727161184 -> 2059727209328[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
+2059727200832 -> 2059727204608 [dir=back]
+2059727200832 -> 2059727190448 [dir=back]
+2059727200832 -> 2059727222544 [dir=back]
+2059727209328 -> 2059727232928 [dir=back]
+2059727209328 -> 2059727211216 [dir=back]
+2059727209328 -> 2059727239536 [dir=back]
 match_rules [ shape=plaintext, label=< <table>
 	<tr>
 		<td><b>Comment</b></td><td>\/\/.*$</td>
