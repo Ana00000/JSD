@@ -18,6 +18,7 @@ from sqlalchemy import or_
 import pdfkit
 import html
 import csv
+import sys
 
 
 css_folder_path = "css/"
@@ -321,7 +322,7 @@ if __name__ == "__main__":
     
     save_teams()
 
-    model = get_model(join(rpt_folder_path, 'team.rpt'))
+    model = get_model(join(rpt_folder_path, sys.argv[1]))
     export_meta_model()
 
     interpret(model)
