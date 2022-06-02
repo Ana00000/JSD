@@ -108,7 +108,7 @@ def get_team_ids_for_team_name(team_name):
     try:
         team_ids = connection.execute(query).fetchall()[0][0]
     except:
-        print("Nije ok")
+        print("Team name error")
 
     connection.close()
 
@@ -281,10 +281,6 @@ def export_player_model(report, filter):
 
     df_player = pd.DataFrame.from_dict(normalized_player_matches)
 
-    #with open("matches.txt", "w") as teams_file:
-    #    teams_file.write(df_player.to_string())
-
-    #print(normalized_player_matches)
 
     create_data(normalized_player, requested_player['name'])
     create_data(normalized_player_matches, requested_player['name'] + 'Matches')
@@ -325,7 +321,7 @@ if __name__ == "__main__":
     
     save_teams()
 
-    model = get_model(join(rpt_folder_path, 'player.rpt'))
+    model = get_model(join(rpt_folder_path, 'team.rpt'))
     export_meta_model()
 
     interpret(model)
