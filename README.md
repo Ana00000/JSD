@@ -1,28 +1,26 @@
                                                       JSD 2021/2022
                                                       
-## Description
+## General Description
 
 DSL for data is created for the purpose of the Domain-Specific Lanugages course at the Faculty of Technical Sciences.
 
-We are creating the reports for football commentators in which they can get all the informations they want about the matches, clubs and players.
-User will be allowed to get the complete informations generated from postgreSQL scripts or he could do a filtering in which he will get only specific informations from the databases.
+We are creating the reports for football commentators in which they can get all the informations they want about the matches, clubs and players for English Premier League.
+ 
+User will be allowed to get the complete informations generated from postgreSQL scripts or he could do a filtering in which he will get only specific informations from the API databases.
 
-In both cases data will be stored in postgreSQL databases, but for the second case request from user will generate a sql query which will alter the data gotten from databases so he gets more appropriate and specific data he needs.
+In both cases data will be stored in postgreSQL databases and CSV files.
+
 Reports of the matches are generated as HTML files and they can be transformed to the PDFs if needed.
 
 The way that the data is collected from the databases is enabled via the language we created specifically for this cause.
-Data used for this application is collected from few different sources, such as:
-1. https://www.api-football.com/
-2. https://serpapi.com/sports-results
-3. ...
+Data used for this application is collected from: 
+https://www.football-data.org/
 
-and many others.
 
 ## Example
 
 Football commentators before the broadcast usually want to be informed about the events in the last round through reports, or events about a team since the beginning of the season.
 
-Several different types of Jinja2 templates are used for the elements (tables, pictures, paragraphs, labels, etc.) in the report.
 
 ## Technologies used
 - [textX](https://github.com/textX/textX)
@@ -42,18 +40,25 @@ Several different types of Jinja2 templates are used for the elements (tables, p
 Initial project layout generated with `textx startproject`.
 
 
-## Installation
+## Installation Instructions
 
-1.  python -m venv venv   // creating local environment
-2. venv/Scripts/activate   // activating environment
-3. pip install -r instalation.txt   // installation of needed libraries 
-4. pip install -e .   // handling dependencies
-5. cd match_reporter/reporter_jsd   // positioning
-6. textx check reporter.tx   // checking grammar
-7. textx list-languages   // checking language
-8. textx list-generators   // checking generator
-9. python reporter_interpreter.py   // running interpreter which creates first set of files and gets all data 
-10. textx generate rpt/model_name.rpt --target html+pdf   // generating html and pdf files for all 'model_name' data found
+'''
+$ git clone https://github.com/Ana00000/JSD
+$ python -m venv venv   // creating local environment
+$ venv/Scripts/activate   // activating environment
+$ cd match_reporter   // positioning
+$ pip install -e .   // handling dependencies
+$ cd reporter_jsd   // positioning
+$ pip install -r instalation.txt   // installation of needed libraries 
+$ textx check reporter.tx   // checking grammar
+$ textx list-languages   // checking language
+$ textx list-generators   // checking generator
+$ python reporter_interpreter.py   // running interpreter which creates first set of files and gets all data 
+$ textx generate rpt/model_name.rpt --target html+pdf   // generating html and pdf files for all 'model_name' data found
+'''
+
+note for Visual Studio Code:  
+for syntax highlighting extension copy the rpt folder into the VSC Extensions folder
 
 
 
@@ -70,6 +75,56 @@ for generating html and pdf files of all teams data. Same goes for 'match' and '
 	textx generate rpt/match.rpt --target html+pdf 
 	textx generate rpt/player.rpt --target html+pdf
 Every time we choose to generate team/match/player data, 'home.html' will be generated as well. This file is basic home page welcome designed using jinja while other files are mainly manipulated via css stylings.
+
+
+
+## Generating Reports
+Reports can be created for matches, teams and players. 
+
+
+# Matches
+The names of both teams has to be specified, either the full name of the team or the short name ("Arsenal FC" "Arsenal").
+Keyword is "Match: "
+Example:
+    "Match: "Arsenal" vs "Newcastle""
+
+# Teams
+The name of the team has to be specified.
+Keyword is "Team: "
+Example:
+    "Team:  "Arsenal""
+
+
+# Players
+When creating reports for a given player, we need to specify the name of the player in conjunction with the name of the club.
+Keyword is "Team: " and "Club- "
+Example:
+    "Player: Name- "Marcos Alonso", Club- "Chelsea""
+
+
+
+# EXAMPLES:
+# 1
+begin
+    Team:  "Everton"
+    Filter by match date: from-"2020-05-01", to-"2021-09-01"
+    Limit: "20"
+end
+
+# 2
+begin 
+    Match: "Arsenal" vs "Newcastle"
+end
+
+# 3
+begin 
+    Player: Name- "Marcos Alonso", Club- "Chelsea"
+    Team:  "Arsenal" 
+    Filter by match date: from-"2020-05-01", to-"2021-09-01"
+    Filter by status: "FINISHED"
+
+end
+
 
 
 
@@ -98,3 +153,4 @@ Filter by status: "FINISHED"
 When applied to a report, it limits the number of results
 example:
 Limit: "10"
+
