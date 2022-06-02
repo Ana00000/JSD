@@ -37,6 +37,39 @@ Several different types of Jinja2 templates are used for the elements (tables, p
 | [Ana Atanacković](https://github.com/Ana00000/) <br> <img src="https://avatars.githubusercontent.com/u/57576323?s=400&u=1ef5aae0fac636355c779a07004eb66378464adc&v=4" width="170" height="170"> | [Aleksandar Savić](https://github.com/aca24) <br> <img src="https://avatars.githubusercontent.com/u/57627600?v=4" width="170" height="170"> | [Branislav Dobrokes](https://github.com/braned98) <br> <img src="https://avatars.githubusercontent.com/u/41323689?v=4" width="170" height="170"> | [David Ereš](https://github.com/erosdavid) <br> <img src="https://avatars.githubusercontent.com/u/30242404?v=4" width="170" height="170"> |
 
 
-# Credits
+## Credits
 
 Initial project layout generated with `textx startproject`.
+
+
+## Installation
+
+1.  python -m venv venv   // creating local environment
+2. venv/Scripts/activate   // activating environment
+3. pip install -r instalation.txt   // installation of needed libraries 
+4. pip install -e .   // handling dependencies
+5. cd match_reporter/reporter_jsd   // positioning
+6. textx check reporter.tx   // checking grammar
+7. textx list-languages   // checking language
+8. textx list-generators   // checking generator
+9. python reporter_interpreter.py   // running interpreter which creates first set of files and gets all data 
+10. textx generate rpt/model_name.rpt --target html+pdf   // generating html and pdf files for all 'model_name' data found
+
+
+
+## General Usage
+
+We use following commands for checking of languages and generators:
+1) textx list-languages
+2) textx list-generators
+Once the csv files are generated via 
+	python reporter_interpreter.py
+command, generator can be successfully used with command
+	textx generate rpt/team.rpt --target html+pdf 
+for generating html and pdf files of all teams data. Same goes for 'match' and 'player':
+	textx generate rpt/match.rpt --target html+pdf 
+	textx generate rpt/player.rpt --target html+pdf
+Every time we choose to generate team/match/player data, 'home.html' will be generated as well. This file is basic home page welcome designed using jinja while other files are mainly manipulated via css stylings.
+
+
+
