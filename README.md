@@ -73,3 +73,28 @@ Every time we choose to generate team/match/player data, 'home.html' will be gen
 
 
 
+## Using Filters
+
+There are three filters that can be applied to each report, these are:
+1.  Filter by match date
+2.  Filter by match status
+3.  Limit the search results
+
+Below are the detailed instructions for the application of the above mentioned filters:
+
+# Filter by DATE
+It can be used to specify a time interval for the report/search based on the dates of the matches. 
+'from' must be used in conjunction with 'to' and vice versa.
+example:
+Filter by match date: from-"2021-01-01", to-"2021-06-01"
+
+# Filter by STATUS
+This filter can be used to narrow down the focus of our report based on the status of the matches.
+'status' is expected to be in enum { SCHEDULED | LIVE | IN_PLAY | PAUSED | FINISHED | POSTPONED | SUSPENDED | CANCELLED }
+example:
+Filter by status: "FINISHED"
+
+# LIMIT
+When applied to a report, it limits the number of results
+example:
+Limit: "10"

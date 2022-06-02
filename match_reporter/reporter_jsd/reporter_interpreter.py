@@ -321,7 +321,7 @@ if __name__ == "__main__":
 
     save_teams()
 
-    model = get_model(join(rpt_folder_path, 'player.rpt'))
+    model = get_model(join(rpt_folder_path, 'match.rpt'))
     export_meta_model()
 
     interpret(model)

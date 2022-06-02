@@ -11,37 +11,34 @@
     edge[dir=black,arrowtail=empty]
 
 
-140540676203824[ label="{Program|}"]
+140300427318736[ label="{Program|}"]
 
-140540676206656[ label="{*Report|}"]
+140300427321568[ label="{*Report|}"]
 
-140540676210064[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
+140300427324976[ label="{Match|firstTeam: STRING\lsecondTeam: STRING\l}"]
 
-140540676213472[ label="{Team|teamName: STRING\l}"]
+140300427328384[ label="{Team|teamName: STRING\l}"]
 
-140540676216880[ label="{Player|name: STRING\lclub: STRING\l}"]
+140300427331792[ label="{Player|name: STRING\lclub: STRING\l}"]
 
-140540676220288[ label="{*Filter|}"]
+140300427335200[ label="{*Filter|}"]
 
-140540676223696[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
+140300427338608[ label="{MatchDate|matchDateFrom: STRING\lmatchDateTo: STRING\l}"]
 
-140540676227104[ label="{Status|status: STRING\l}"]
+140300427342016[ label="{Status|status: STRING\l}"]
 
-140540676230512[ label="{Limit|limit: STRING\l}"]
-
-140540676233920[ label="{Matchday|matchday: STRING\l}"]
+140300427345424[ label="{Limit|limit: STRING\l}"]
 
 
 
-140540676203824 -> 140540676206656[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
-140540676203824 -> 140540676220288[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
-140540676206656 -> 140540676210064 [dir=back]
-140540676206656 -> 140540676213472 [dir=back]
-140540676206656 -> 140540676216880 [dir=back]
-140540676220288 -> 140540676223696 [dir=back]
-140540676220288 -> 140540676227104 [dir=back]
-140540676220288 -> 140540676230512 [dir=back]
-140540676220288 -> 140540676233920 [dir=back]
+140300427318736 -> 140300427321568[arrowtail=diamond, dir=both, headlabel="reports 0..*"]
+140300427318736 -> 140300427335200[arrowtail=diamond, dir=both, headlabel="filters 0..*"]
+140300427321568 -> 140300427324976 [dir=back]
+140300427321568 -> 140300427328384 [dir=back]
+140300427321568 -> 140300427331792 [dir=back]
+140300427335200 -> 140300427338608 [dir=back]
+140300427335200 -> 140300427342016 [dir=back]
+140300427335200 -> 140300427345424 [dir=back]
 match_rules [ shape=plaintext, label=< <table>
 	<tr>
 		<td><b>Comment</b></td><td>\/\/.*$</td>
