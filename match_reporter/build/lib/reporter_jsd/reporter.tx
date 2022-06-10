@@ -1,0 +1,44 @@
+Program:
+  'begin'
+    reports*=Report   
+    filters*=Filter
+  'end'
+;
+
+Report:
+  Match | Team | Player
+;
+
+Match: 
+  'Match: ' firstTeam=STRING 'vs' secondTeam=STRING 
+;
+
+Team:
+  'Team: ' + teamName=STRING 
+;
+
+Player:
+  'Player: Name-' name=STRING ', Club-' club=STRING
+;
+
+Filter: 
+  MatchDate | Status | Limit
+;
+
+MatchDate:
+  'Filter by match date: '
+  'from-' matchDateFrom=STRING 
+  ', to-' matchDateTo=STRING 
+;
+
+Status:
+  'Filter by status: ' status=STRING 
+;
+
+Limit:
+  'Limit: ' limit=STRING 
+;
+
+Comment:
+  /\/\/.*$/
+;

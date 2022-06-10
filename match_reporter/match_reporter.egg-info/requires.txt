@@ -1,4 +1,10 @@
+mkdocs
+numpy
+pandas
+pdfkit
+psycopg2
 textX
+textX-dev
 
 [dev]
 wheel
