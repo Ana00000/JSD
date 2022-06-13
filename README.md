@@ -53,7 +53,7 @@ $ pip install -r instalation.txt   // installation of needed libraries
 $ textx check reporter.tx   // checking grammar
 $ textx list-languages   // checking language
 $ textx list-generators   // checking generator
-$ python reporter_interpreter.py   // running interpreter which creates first set of files and gets all data 
+$ python reporter_interpreter.py model_name.rpt  // running interpreter which creates first set of files and gets all data 
 $ textx generate rpt/model_name.rpt --target html+pdf   // generating html and pdf files for all 'model_name' data found
 '''
 
