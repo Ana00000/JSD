@@ -43,20 +43,20 @@ Initial project layout generated with `textx startproject`.
 ## Installation Instructions
 
 
-'''
+```
 $ git clone https://github.com/Ana00000/JSD
-$ python -m venv venv   // creating local environment
+$ python -m venv venv   // creating local environmen
 $ venv/Scripts/activate   // activating environment
 $ cd match_reporter   // positioning
 $ pip install -e .   // handling dependencies
 $ cd reporter_jsd   // positioning
-$ pip install -r instalation.txt   // installation of needed libraries 
+$ pip install -r instalation.txt   // installation of needed libraries
 $ textx check reporter.tx   // checking grammar
 $ textx list-languages   // checking language
 $ textx list-generators   // checking generator
-$ python reporter_interpreter.py model_name.rpt  // running interpreter which creates first set of files and gets all data 
+$ python reporter_interpreter.py model_name.rpt  // running interpreter which creates first set of files and gets all data
 $ textx generate rpt/model_name.rpt --target html+pdf   // generating html and pdf files for all 'model_name' data found
-'''
+```
 
 note for Visual Studio Code:  
 for syntax highlighting extension copy the rpt folder into the VSC Extensions folder
