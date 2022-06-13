@@ -42,6 +42,7 @@ Initial project layout generated with `textx startproject`.
 
 ## Installation Instructions
 
+
 '''
 $ git clone https://github.com/Ana00000/JSD
 $ python -m venv venv   // creating local environment
@@ -64,93 +65,93 @@ for syntax highlighting extension copy the rpt folder into the VSC Extensions fo
 
 ## General Usage
 
-We use following commands for checking of languages and generators:
-1) textx list-languages
-2) textx list-generators
-Once the csv files are generated via 
-	python reporter_interpreter.py
-command, generator can be successfully used with command
-	textx generate rpt/team.rpt --target html+pdf 
-for generating html and pdf files of all teams data. Same goes for 'match' and 'player':
-	textx generate rpt/match.rpt --target html+pdf 
-	textx generate rpt/player.rpt --target html+pdf
-Every time we choose to generate team/match/player data, 'home.html' will be generated as well. This file is basic home page welcome designed using jinja while other files are mainly manipulated via css stylings.
+We use the following commands for checking of languages and generators:<br/>
+1) textx list-languages<br/>
+2) textx list-generators<br/>
+Once the csv files are generated via <br/>
+	&emsp;$ python reporter_interpreter.py<br/>
+command, generator can be successfully used with command<br/>
+	&emsp;$ textx generate rpt/team.rpt --target html+pdf <br/>
+for generating html and pdf files of all teams data. Same goes for 'match' and 'player':<br/>
+	&emsp;$ textx generate rpt/match.rpt --target html+pdf <br/>
+	&emsp;$ textx generate rpt/player.rpt --target html+pdf<br/>
+Every time we choose to generate team/match/player data, 'home.html' will be generated as well. This file is basic home page welcome designed using jinja while other files are mainly manipulated via css stylings.<br/>
 
 
 
-## Generating Reports
-Reports can be created for matches, teams and players. 
+## Generating Reports<br/>
+Reports can be created for matches, teams and players. <br/>
 
 
-# Matches
-The names of both teams has to be specified, either the full name of the team or the short name ("Arsenal FC" "Arsenal").
-Keyword is "Match: "
-Example:
-    "Match: "Arsenal" vs "Newcastle""
+### Matches<br/>
+The names of both teams has to be specified, either the full name of the team or the short name ("Arsenal FC" "Arsenal").<br/>
+Keyword is "Match: "<br/>
+Example:<br/>
+    &emsp;"Match: "Arsenal" vs "Newcastle""<br/>
 
-# Teams
-The name of the team has to be specified.
-Keyword is "Team: "
-Example:
-    "Team:  "Arsenal""
-
-
-# Players
-When creating reports for a given player, we need to specify the name of the player in conjunction with the name of the club.
-Keyword is "Team: " and "Club- "
-Example:
-    "Player: Name- "Marcos Alonso", Club- "Chelsea""
+### Teams<br/>
+The name of the team has to be specified.<br/>
+Keyword is "Team: "<br/>
+Example:<br/>
+    &emsp;"Team:  "Arsenal""
 
 
-
-# EXAMPLES:
-# 1
-begin
-    Team:  "Everton"
-    Filter by match date: from-"2020-05-01", to-"2021-09-01"
-    Limit: "20"
-end
-
-# 2
-begin 
-    Match: "Arsenal" vs "Newcastle"
-end
-
-# 3
-begin 
-    Player: Name- "Marcos Alonso", Club- "Chelsea"
-    Team:  "Arsenal" 
-    Filter by match date: from-"2020-05-01", to-"2021-09-01"
-    Filter by status: "FINISHED"
-
-end
+### Players<br/>
+When creating reports for a given player, we need to specify the name of the player in conjunction with the name of the club.<br/>
+Keyword is "Team: " and "Club- "<br/>
+Example:<br/>
+    &emsp;"Player: Name- "Marcos Alonso", Club- "Chelsea""<br/>
 
 
 
 
-## Using Filters
+### EXAMPLE 1<br/>
+begin<br/>
+    &emsp;Team:  "Everton"<br/>
+    &emsp;Filter by match date: from-"2020-05-01", to-"2021-09-01"<br/>
+    &emsp;Limit: "20"<br/>
+end<br/>
 
-There are three filters that can be applied to each report, these are:
-1.  Filter by match date
-2.  Filter by match status
-3.  Limit the search results
+### EXAMPLE 2<br/>
+begin <br/>
+    &emsp;Match: "Arsenal" vs "Newcastle"<br/>
+end<br/>
 
-Below are the detailed instructions for the application of the above mentioned filters:
+### EXAMPLE 3<br/>
+begin <br/>
+    &emsp;Player: Name- "Marcos Alonso", Club- "Chelsea"<br/>
+    &emsp;Team:  "Arsenal" <br/>
+    &emsp;Filter by match date: from-"2020-05-01", to-"2021-09-01"<br/>
+    &emsp;Filter by status: "FINISHED"<br/>
 
-# Filter by DATE
-It can be used to specify a time interval for the report/search based on the dates of the matches. 
-'from' must be used in conjunction with 'to' and vice versa.
-example:
-Filter by match date: from-"2021-01-01", to-"2021-06-01"
+end<br/>
 
-# Filter by STATUS
-This filter can be used to narrow down the focus of our report based on the status of the matches.
-'status' is expected to be in enum { SCHEDULED | LIVE | IN_PLAY | PAUSED | FINISHED | POSTPONED | SUSPENDED | CANCELLED }
-example:
-Filter by status: "FINISHED"
 
-# LIMIT
-When applied to a report, it limits the number of results
-example:
-Limit: "10"
+
+
+## Using Filters<br/>
+
+There are three filters that can be applied to each report, these are:<br/>
+1.  Filter by match date<br/>
+2.  Filter by match status<br/>
+3.  Limit the search results<br/>
+
+Below are the detailed instructions for the application of the above mentioned filters:<br/>
+
+### Filter by DATE<br/>
+It can be used to specify a time interval for the report/search based on the dates of the matches. <br/>
+'from' must be used in conjunction with 'to' and vice versa.<br/>
+example:<br/>
+&emsp;Filter by match date: from-"2021-01-01", to-"2021-06-01"<br/>
+
+### Filter by STATUS<br/>
+This filter can be used to narrow down the focus of our report based on the status of the matches.<br/>
+'status' is expected to be in enum { SCHEDULED | LIVE | IN_PLAY | PAUSED | FINISHED | POSTPONED | SUSPENDED | CANCELLED }<br/>
+example:<br/>
+&emsp;Filter by status: "FINISHED"<br/>
+
+### LIMIT<br/>
+When applied to a report, it limits the number of results<br/>
+example:<br/>
+&emsp;Limit: "10"<br/>
 
