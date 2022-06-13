@@ -1,0 +1,32 @@
+html {
+  background-color: #556B2F;
+  padding-top: 17%;
+}
+
+table {
+  white-space: nowrap;
+  border: 10px solid rgb(6, 16, 2);
+  font-size: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+td.rights {
+  text-align: center;
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(180, 218, 155);
+}
+
+th {
+  background-color: #057412;
+}
+
+tr:nth-child(even) {
+  background-color: #62ad62;
+}
+
+th, tr, td {
+  text-align: center;
+}

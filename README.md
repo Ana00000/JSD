@@ -42,24 +42,23 @@ Initial project layout generated with `textx startproject`.
 
 ## Installation Instructions
 
-```
-$ git clone https://github.com/Ana00000/JSD<br/>
-$ python -m venv venv   // creating local environment<br/>
-$ venv/Scripts/activate   // activating environment<br/>
-$ cd match_reporter   // positioning<br/>
-$ pip install -e .   // handling dependencies<br/>
-$ cd reporter_jsd   // positioning<br/>
-$ pip install -r instalation.txt   // installation of needed libraries <br/>
-$ textx check reporter.tx   // checking grammar<br/>
-$ textx list-languages   // checking language<br/>
-$ textx list-generators   // checking generator<br/>
-$ python reporter_interpreter.py   // running interpreter which creates first set of files and gets all data <br/>
-$ textx generate rpt/model_name.rpt --target html+pdf   // generating html and pdf files for all 'model_name' data found<br/>
-```
-<br/>
 
+'''
+$ git clone https://github.com/Ana00000/JSD
+$ python -m venv venv   // creating local environment
+$ venv/Scripts/activate   // activating environment
+$ cd match_reporter   // positioning
+$ pip install -e .   // handling dependencies
+$ cd reporter_jsd   // positioning
+$ pip install -r instalation.txt   // installation of needed libraries 
+$ textx check reporter.tx   // checking grammar
+$ textx list-languages   // checking language
+$ textx list-generators   // checking generator
+$ python reporter_interpreter.py model_name.rpt  // running interpreter which creates first set of files and gets all data 
+$ textx generate rpt/model_name.rpt --target html+pdf   // generating html and pdf files for all 'model_name' data found
+'''
 
-note for Visual Studio Code:  <br/>
+note for Visual Studio Code:  
 for syntax highlighting extension copy the rpt folder into the VSC Extensions folder
 
 
