@@ -93,7 +93,8 @@ def generate_match_and_team_files(model_path):
     generated_files = 0
 
     for csv_file_name in os.listdir(csv_folder_path):
-        model_name = model_path.split('\\')[-1][:-4]
+        model_name = model_path.split('\\')
+        model_name = model_name[-1].split('/')[-1][:-4]
         if '.csv' in csv_file_name and model_name in csv_file_name.lower():
             generated_files +=1
             generate_files_from_data(csv_file_name)
